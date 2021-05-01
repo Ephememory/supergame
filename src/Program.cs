@@ -22,11 +22,12 @@ namespace Cool
         static void Main(string[] args)
         {
             _ents = new List<Entity>();
-
             _world = new World(new Vector2 {X = 0, Y= 0 });
             
             Raylib.InitWindow(ScreenWidth, ScreenHeight, "C# Raylib Game");
+
             _cam = new Camera2D();
+            _cam.zoom = 1;
             var player = new Player.Player(_world, new BodyDef
             {
                 awake = true,
@@ -43,18 +44,23 @@ namespace Cool
             while(!Raylib.WindowShouldClose())
             {
                 _cam.target = System.Numerics.Vector2.Lerp(_cam.target, 
-                    new System.Numerics.Vector2(player.Body.GetPosition().X, player.Body.GetPosition().Y), 0.3f);
+                    new System.Numerics.Vector2(player.Body.GetPosition().X, player.Body.GetPosition().Y), 0.01f);
+
                 _cam.offset = new System.Numerics.Vector2(Raylib.GetScreenWidth() / 2, Raylib.GetScreenHeight() / 2);
+
+                //Physics step
                 _world.Step(1.0f / 60.0f, 6, 2);
+
                 Raylib.BeginDrawing();
                 Raylib.ClearBackground(Raylib_cs.Color.DARKGRAY);
-
-                foreach(var e in _ents)
-                {
-                    e.Tick(Raylib.GetFrameTime());
-                    e.Render(Raylib.GetFrameTime());
-                }
-
+                    Raylib.BeginMode2D(_cam);
+                        Raylib.DrawRectangle(0,0, 128, 127, Raylib_cs.Color.RED);
+                        foreach(var e in _ents)
+                        {
+                            e.Tick(Raylib.GetFrameTime());
+                            e.Render(Raylib.GetFrameTime());
+                        }
+                    Raylib.EndMode2D();
                 Raylib.EndDrawing();
             }
         }

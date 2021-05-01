@@ -6,7 +6,7 @@ using Raylib_cs;
 
 namespace Cool.Entities
 {
-    public struct VisualComponent
+    public struct Visuals
     {
         public Texture2D Texture;
         public TextureFilterMode Mode;

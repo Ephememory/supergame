@@ -14,9 +14,15 @@ namespace Cool.Player
     public class Player : Entity
     {
 
+        public struct UserCommand
+        {
+            public Vector2 InputVector;
+            public byte KeysDown;
+        }
+
         public Player(World world, BodyDef bodyDef) : base(world, bodyDef)
         {
-            _visual = new VisualComponent
+            _visual = new Visuals
             {
                 Texture = Raylib.LoadTexture("assets/tex/tileset1.png"),
                 Tint = Raylib_cs.Color.WHITE,
@@ -38,11 +44,37 @@ namespace Cool.Player
 
         public override void Tick(float dT)
         {
-            if(Raylib.IsKeyReleased(KeyboardKey.KEY_W))
+            float InputY = 0;
+            float InputX = 0;
+            if(Raylib.IsKeyDown(KeyboardKey.KEY_W))
             {
-                _body.ApplyLinearImpulseToCenter(new System.Numerics.Vector2{X = 0,  Y = 2});
-                Console.WriteLine($"velocity: {_body.GetLinearVelocity()}");
+                InputY = -1.0f;
             }
+            else if (Raylib.IsKeyDown(KeyboardKey.KEY_S))
+            {
+                InputY = 1.0f;
+            }
+
+            if(Raylib.IsKeyDown(KeyboardKey.KEY_D))
+            {
+                InputX = 1.0f;
+            }
+            else if (Raylib.IsKeyDown(KeyboardKey.KEY_A))
+            {
+                InputX = -1.0f;
+            }
+
+            var cmd = new UserCommand 
+            {
+                InputVector = new Vector2 
+                { 
+                    X = InputX,
+                    Y = InputY
+                },
+            };
+
+            var newVelocity = cmd.InputVector * _stats.BaseMoveSpeed;
+            _body.SetLinearVelocity(newVelocity);
         }
     }
 

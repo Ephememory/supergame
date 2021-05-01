@@ -15,10 +15,13 @@ namespace Cool.Entities
         protected Body _body;
         public Body Body => _body;
         protected bool _markedForDelete;
-        protected VisualComponent _visual;
+        protected Visuals _visual;
+        protected Stats _stats;
+        public Stats EntStats => _stats;
 
         public Entity(World world, BodyDef bodyDef)
-        {            
+        {   
+            _stats = new Stats{};
             PolygonShape shape = new PolygonShape(1.0f, 1.0f);
             var fixDef = new FixtureDef {
                 density = 1.0f,
