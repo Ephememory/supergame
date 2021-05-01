@@ -1,0 +1,6 @@
+/obj
+/bin
+/assets
+
+*.sln
+*.csproj
